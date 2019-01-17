@@ -1,9 +1,28 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      Tab Two
+      Date: {{date}}
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content></ion-content>
+<ion-content>
+
+  <ion-card *ngFor="let item of weekBoardData">
+    <ion-card-header>
+      <ion-card-title>Date: {{item.date}}</ion-card-title>
+      <ion-card-subtitle>Budget On this date : {{item.today_budget}}</ion-card-subtitle>
+      <ion-card-subtitle>Expenses on this date : {{item.expenses}}</ion-card-subtitle>
+      <ion-card-subtitle>Saved Amount on this date : {{item.save}}</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="floating">Enter here your expenses on this date</ion-label>
+        <ion-input [(ngModel)]="item.expenses" [disabled]="item.isTouched == 1"></ion-input>
+      </ion-item>
+      <ion-button expand="block" color="dark" [disabled]="item.isTouched == 1" (click)="presentAlertConfirm(item.day_id, item.expenses, item.today_budget)">Update</ion-button>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

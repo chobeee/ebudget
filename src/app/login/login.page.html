@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>EBudget</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-label>
+    <h1 style="text-align:center;font-weight:bolder">Login</h1>
+  </ion-label>
+  <ion-item margin>
+    <ion-label position="floating">Email</ion-label>
+    <ion-input #email></ion-input>
+  </ion-item>
+  <ion-item margin>
+    <ion-label position="floating">Password</ion-label>
+    <ion-input #password></ion-input>
+  </ion-item>
+
+  <ion-button expand="full" (click)="login(email.value, password.value)" margin>Login</ion-button>
+  <ion-button expand="full" (click)="register()" margin>Register</ion-button>
+</ion-content>

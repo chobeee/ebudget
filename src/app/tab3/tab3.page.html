@@ -1,9 +1,42 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      Tab Three
+      Profile
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content></ion-content>
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+    </ion-card-header>
+    <ion-avatar style="margin:auto;">
+      <img src="assets/img/face.png">
+    </ion-avatar>
+    <ion-card-content text-center>
+      <h4 text-center>Tricia Mae Gayatin</h4>
+      <p text-center>triciamaegayatin@gmail.com</p>
+      <ion-button color="secondary" href="" size="small">Edit Profile</ion-button> <br>
+      <ion-button color="main" size="small" fill="clear" (click)="logout()">Logout</ion-button>
+    </ion-card-content>
+  </ion-card>
+
+
+  <ion-list>
+    <ion-item>
+      <ion-icon name="logo-usd" item-start></ion-icon>
+      Accumulated Expenses in total:
+      <ion-content item-end>590</ion-content>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="star" item-start></ion-icon>
+      Accumulated Savings in total:
+      <ion-content item-end>410</ion-content>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="create" item-start></ion-icon>
+      Input Budget for the Week:
+      <ion-content item-end>1000</ion-content>
+    </ion-item>
+  </ion-list>
+</ion-content>
