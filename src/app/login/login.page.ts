@@ -29,6 +29,8 @@ export class LoginPage implements OnInit {
       this.authService.login(email, password).subscribe((successData) => {
         if (successData.message == "success") {
           localStorage.setItem("id", successData.id.toString());
+          localStorage.setItem("email", successData.email);
+          localStorage.setItem("full_name", successData.fullname);
           this.router.navigate(["tab"]);
 
         } else {

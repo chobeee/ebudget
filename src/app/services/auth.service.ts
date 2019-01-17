@@ -49,7 +49,9 @@ export class AuthService {
 }
 interface login {
   message: string,
-  id: number
+  id: number,
+  email: string,
+  fullname: string,
 }
 interface register {
   status: string,

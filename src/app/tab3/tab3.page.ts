@@ -7,6 +7,9 @@ import { Router } from '@angular/router';
   styleUrls: ['tab3.page.scss']
 })
 export class Tab3Page {
+  full_name = localStorage.getItem("full_name");
+  email = localStorage.getItem("email");
+
   constructor(private router: Router) { }
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
