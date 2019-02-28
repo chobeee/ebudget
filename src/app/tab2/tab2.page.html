@@ -1,28 +1,79 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>
-      Date: {{date}}
-    </ion-title>
+  <ion-toolbar color="tertiary">
+    <ion-label slot="start" margin *ngIf="budgetInfo">
+      <p>Expenses</p>
+      <h6>₱ {{budgetInfo.expenses}}</h6>
+    </ion-label>
+    <ion-label slot="start" margin *ngIf="budgetInfo">
+      <p>Budget</p>
+      <h6>₱ {{budgetInfo.budget}}</h6>
+    </ion-label>
+    <ion-buttons slot="end">
+      <ion-button (click)="presentModal();" [disabled]="gotBudget || !isTodaysDate">
+        <ion-icon slot="icon-only" name="cash"></ion-icon>
+      </ion-button>
+      <ion-button (click)="reset();">
+        <ion-icon slot="icon-only" name="refresh"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
+  <ion-toolbar [color]="isTodaysDate ? 'tertiary': 'medium'">
+    <ion-buttons slot="start">
+      <ion-button (click)="moveWeek('backward');">
+        <ion-icon slot="icon-only" name="arrow-dropleft"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>
+      <h5 style="font-size:.8em; font-weight:bolder;text-align: center;">{{displayCurrentStartWeek}} -
+        {{displayCurrentEndWeek}}
+        {{currentYear}}</h5>
+    </ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="moveWeek('forward');">
+        <ion-icon slot="icon-only" name="arrow-dropright"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+
+
+
 </ion-header>
 
 <ion-content>
-
-  <ion-card *ngFor="let item of weekBoardData">
+  <ion-item *ngIf="budgetInfo">
+    <ion-label style="text-align:center;color:gray">
+      <p>Expenses Today: ₱ {{expenses_today}}</p>
+      <p>Suggested Budget Per Day: ₱ {{suggestedBudgetPerDay}}</p>
+    </ion-label>
+  </ion-item>
+  <ion-card *ngFor="let transaction of transactions">
     <ion-card-header>
-      <ion-card-title>Date: {{item.date}}</ion-card-title>
-      <ion-card-subtitle>Budget On this date : {{item.today_budget}}</ion-card-subtitle>
-      <ion-card-subtitle>Expenses on this date : {{item.expenses}}</ion-card-subtitle>
-      <ion-card-subtitle>Saved Amount on this date : {{item.save}}</ion-card-subtitle>
+      <ion-card-subtitle>{{transaction.day}}</ion-card-subtitle>
+      <ion-card-title>{{transaction.beautyDate}}</ion-card-title>
     </ion-card-header>
 
     <ion-card-content>
-      <ion-item>
-        <ion-label position="floating">Enter here your expenses on this date</ion-label>
-        <ion-input [(ngModel)]="item.expenses" [disabled]="item.isTouched == 1"></ion-input>
-      </ion-item>
-      <ion-button expand="block" color="dark" [disabled]="item.isTouched == 1" (click)="presentAlertConfirm(item.day_id, item.expenses, item.today_budget)">Update</ion-button>
+      <ion-list>
+        <ion-item *ngFor="let data of transaction.data">
+          <ion-thumbnail slot="start">
+            <img [src]="data.icon_src">
+          </ion-thumbnail>
+          <ion-label>
+            <h6 style="font-weight:bolder">{{data.name}}</h6>
+            <h5 style="color:red">₱{{data.amount}}</h5>
+            <p *ngIf="data.note" text-wrap>{{data.note}}</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
     </ion-card-content>
   </ion-card>
+
+  <ion-fab color="tertiary" vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="presentTransactionModal();" [disabled]="!gotBudget || !isTodaysDate">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 
 </ion-content>

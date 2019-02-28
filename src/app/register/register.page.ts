@@ -28,9 +28,9 @@ export class RegisterPage implements OnInit {
 
     await alert.present();
   }
-  register(email, password, name) {
+  register(email, password, name, gender) {
     if (email != "" && password != "" && name != "") {
-      this.authService.register(email, password, name).subscribe((successData) => {
+      this.authService.register(email, password, name, gender).subscribe((successData) => {
         if (successData.status == "success") {
           this.presentAlert("Registration Success");
         } else {

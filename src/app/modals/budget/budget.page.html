@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar color="secondary">
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel();">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>
+      <h5 style="font-size:1em; font-weight:bolder;text-align:center;">Add Budget</h5>
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="submit(budget.value);">
+        <ion-icon slot="icon-only" name="checkmark"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-toolbar color="secondary">
+    <ion-title>
+      <h5 style="font-size:.8em; font-weight:bolder;text-align: center;">{{displayDates.currentStartWeek}} -
+        {{displayDates.currentEndWeek}}
+        {{displayDates.currentYear}}</h5>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-text color="primary">
+    <p style="font-weight:700;">Information</p>
+  </ion-text>
+
+  <ion-item>
+    <ion-label position="floating" color="primary">Budget</ion-label>
+    <ion-input type="number" #budget></ion-input>
+  </ion-item>
+</ion-content>

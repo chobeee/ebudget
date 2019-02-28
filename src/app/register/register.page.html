@@ -20,6 +20,14 @@
     <ion-label position="floating">Name</ion-label>
     <ion-input #name></ion-input>
   </ion-item>
-  <ion-button expand="full" (click)="register(email.value, password.value, name.value)">Register</ion-button>
+  <ion-item margin>
+    <ion-label>Gender</ion-label>
+    <ion-select placeholder="Select One" #gender>
+      <ion-select-option value="female">Female</ion-select-option>
+      <ion-select-option value="male">Male</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-button expand="full" (click)="register(email.value, password.value, name.value,gender.value)">Register
+  </ion-button>
   <ion-button expand="full" (click)="login()">Login</ion-button>
 </ion-content>

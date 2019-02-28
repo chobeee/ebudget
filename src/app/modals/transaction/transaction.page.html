@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar color="light">
+    <ion-buttons slot="start">
+      <ion-button (click)="back();">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>
+      <h3 style="font-weight:bold;font-size: 1em">Add Transaction</h3>
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="submit(amt.value, cat.value,note.value);">
+        <h5 style="font-weight:bold;font-size: .8em">SAVE</h5>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-card>
+    <ion-card-content>
+      <ion-item>
+        <ion-thumbnail slot="start">
+          <img src="assets/icon/peso.png">
+        </ion-thumbnail>
+        <ion-input type="number" style="font-size:1.5em" placeholder="Enter the amount" #amt></ion-input>
+      </ion-item>
+
+      <ion-item (click)="chooseCategory();">
+        <ion-thumbnail slot="start">
+          <img [src]="selectedCategory.icon_src">
+        </ion-thumbnail>
+        <ion-input [value]="selectedCategory.name" type="text" placeholder="Select Category" #cat></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-thumbnail slot="start">
+          <img src="assets/icon/notepad.png">
+        </ion-thumbnail>
+        <ion-textarea clearInput placeholder="Write note (optional)" #note></ion-textarea>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

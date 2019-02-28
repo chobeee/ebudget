@@ -8,8 +8,66 @@ import { async } from '@angular/core/testing';
   providedIn: 'root'
 })
 export class DataService {
-  server_ip = "http://localhost/ebudget/";
+  server_ip = "http://192.168.100.2:5000/user";
   constructor(private http: HttpClient) { }
+  getLeaderboard(start, end) {
+    const url = this.server_ip + "/leaderboard";
+    const params = new HttpParams().set("start", start).set('end', end);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      }),
+      params
+    };
+    return this.http.get<[]>(url, httpOptions);
+  }
+
+  addTransaction(transact_data) {
+    const url = this.server_ip + "/transact";
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      })
+    };
+    return this.http.post(url, transact_data, httpOptions);
+  }
+  getTransactions(week_id) {
+    const url = this.server_ip + "/transact";
+    const params = new HttpParams().set("week_id", week_id)
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      }),
+      params
+    };
+    return this.http.get<Transactions[]>(url, httpOptions);
+  }
+
+  addBudget(budget_data) {
+    const url = this.server_ip + "/budget";
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      })
+    };
+    return this.http.post(url, budget_data, httpOptions);
+  }
+  getBudget(id, start, end) {
+    const url = this.server_ip + "/budget";
+    const params = new HttpParams().set("id", id).set("start", start).set("end", end);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      }),
+      params
+    };
+    return this.http.get(url, httpOptions);
+  }
 
   isCurrentWeekParticipant(id, start, end) {
     const url = this.server_ip + "isParticipant.php";
@@ -87,6 +145,16 @@ export class DataService {
     return this.http.post(url, data, httpOptions);
 
   }
+}
+interface Transactions {
+  amount: number,
+  date: string,
+  day_id: number,
+  icon_src: string,
+  name: string,
+  note: string,
+  timestamp: string,
+  week_id: number
 }
 interface isParticipant {
   status: string,

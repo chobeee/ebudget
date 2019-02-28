@@ -9,15 +9,15 @@ import { async } from '@angular/core/testing';
   providedIn: 'root'
 })
 export class AuthService {
-  server_ip = "http://localhost/ebudget/"
+  server_ip = "http://192.168.100.2:5000/auth";
 
   constructor(private http: HttpClient) { }
 
-  login(email, password) {
-    const url = this.server_ip + "login.php";
+  login(email, pwd) {
+    const url = this.server_ip + "/login";
     const data = {
       email,
-      password
+      pwd
     }
     const httpOptions = {
       headers: new HttpHeaders({
@@ -29,12 +29,13 @@ export class AuthService {
     return this.http.post<login>(url, data, httpOptions);
   }
 
-  register(email, password, name) {
-    const url = this.server_ip + "register.php";
+  register(email, password, name, gender) {
+    const url = this.server_ip + "/register";
     const data = {
       email,
-      password,
-      name
+      pwd: password,
+      full_name: name,
+      gender
     }
     const httpOptions = {
       headers: new HttpHeaders({
@@ -51,7 +52,8 @@ interface login {
   message: string,
   id: number,
   email: string,
-  fullname: string,
+  full_name: string,
+  avatar_src: string
 }
 interface register {
   status: string,

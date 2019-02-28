@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
-
+import { Storage } from '@ionic/storage';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -10,7 +10,10 @@ import { AlertController } from '@ionic/angular';
 })
 export class LoginPage implements OnInit {
 
-  constructor(private authService: AuthService, private router: Router, private alertController: AlertController) { }
+  constructor(private authService: AuthService,
+    private router: Router,
+    private alertController: AlertController,
+    private storage: Storage) { }
 
   ngOnInit() {
   }
@@ -27,17 +30,23 @@ export class LoginPage implements OnInit {
   login(email, password) {
     if (email != "" && password != "") {
       this.authService.login(email, password).subscribe((successData) => {
-        if (successData.message == "success") {
-          localStorage.setItem("id", successData.id.toString());
-          localStorage.setItem("email", successData.email);
-          localStorage.setItem("full_name", successData.fullname);
-          this.router.navigate(["tab"]);
-
-        } else {
-          this.presentAlert("Incorrect Email Or Password");
+        let user_data = {
+          id: successData.id,
+          email: successData.email,
+          full_name: successData.full_name,
+          avatar_src: successData.avatar_src
         }
+        console.log(successData)
+        this.storage.set('user_data', JSON.stringify(user_data));
+        this.storage.set('isNotified', false);
 
-      }, (error) => console.log(error));
+        this.router.navigate(["tab"]);
+
+
+      }, (error) => {
+        console.log(error)
+        this.presentAlert(error.error.message);
+      });
     } else {
       this.presentAlert("Please fill all fields")
     }

@@ -1,0 +1,20 @@
+export var categories = [
+    { name: "Bills & Utilities", icon_src: "assets/icon/bills_icon.png" },
+    { name: "Transportation", icon_src: "assets/icon/transpo_icon.png" },
+    { name: "Food & Beverage", icon_src: "assets/icon/food_drinks_icon.png" },
+    { name: "Shopping", icon_src: "assets/icon/shopping_icon.png" },
+    { name: "Friends & Lover", icon_src: "assets/icon/heart_icon.png" },
+    { name: "Entertainment", icon_src: "assets/icon/entertainment.png" },
+    { name: "Travel", icon_src: "assets/icon/travel.png" },
+    { name: "Health & Fitness", icon_src: "assets/icon/health.png" },
+    { name: "Gifts & Donations", icon_src: "assets/icon/gifts.png" },
+    { name: "Family", icon_src: "assets/icon/family.png" },
+    { name: "Education", icon_src: "assets/icon/education.png" },
+    { name: "Investment", icon_src: "assets/icon/investment.png" },
+    { name: "Business", icon_src: "assets/icon/business.png" },
+    { name: "Insurances", icon_src: "assets/icon/insurances.png" },
+    { name: "Fees & Charges", icon_src: "assets/icon/fee.png" },
+    { name: "Withdrawal", icon_src: "assets/icon/withdraw.png" },
+    { name: "Others", icon_src: "assets/icon/box.png" },
+]
+

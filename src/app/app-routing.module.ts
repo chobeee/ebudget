@@ -10,6 +10,9 @@ const routes: Routes = [
     redirectTo: 'login',
     pathMatch: 'full'
   },
+  { path: 'budget', loadChildren: './modals/budget/budget.module#BudgetPageModule' },
+  { path: 'transaction', loadChildren: './modals/transaction/transaction.module#TransactionPageModule' },
+  { path: 'categories', loadChildren: './modals/categories/categories.module#CategoriesPageModule' },
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
