@@ -8,7 +8,7 @@ import { async } from '@angular/core/testing';
   providedIn: 'root'
 })
 export class DataService {
-  server_ip = "http://localhost:8012/ebudget/api";
+  server_ip = "http://localhost/ebudget/api";
   constructor(private http: HttpClient) { }
   getLeaderboard(start, end) {
     const url = this.server_ip + "/leaderboard.php";
