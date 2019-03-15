@@ -8,10 +8,10 @@ import { async } from '@angular/core/testing';
   providedIn: 'root'
 })
 export class DataService {
-  server_ip = "http://192.168.100.2:5000/user";
+  server_ip = "http://localhost:8012/ebudget/api";
   constructor(private http: HttpClient) { }
   getLeaderboard(start, end) {
-    const url = this.server_ip + "/leaderboard";
+    const url = this.server_ip + "/leaderboard.php";
     const params = new HttpParams().set("start", start).set('end', end);
     const httpOptions = {
       headers: new HttpHeaders({
@@ -24,7 +24,7 @@ export class DataService {
   }
 
   addTransaction(transact_data) {
-    const url = this.server_ip + "/transact";
+    const url = this.server_ip + "/addTransact.php";
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ export class DataService {
     return this.http.post(url, transact_data, httpOptions);
   }
   getTransactions(week_id) {
-    const url = this.server_ip + "/transact";
+    const url = this.server_ip + "/getTransact.php";
     const params = new HttpParams().set("week_id", week_id)
     const httpOptions = {
       headers: new HttpHeaders({
@@ -47,7 +47,7 @@ export class DataService {
   }
 
   addBudget(budget_data) {
-    const url = this.server_ip + "/budget";
+    const url = this.server_ip + "/addBudget.php";
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ export class DataService {
     return this.http.post(url, budget_data, httpOptions);
   }
   getBudget(id, start, end) {
-    const url = this.server_ip + "/budget";
+    const url = this.server_ip + "/getBudget.php";
     const params = new HttpParams().set("id", id).set("start", start).set("end", end);
     const httpOptions = {
       headers: new HttpHeaders({

@@ -5,6 +5,14 @@
 </ion-header>
 
 <ion-content padding>
+  <ion-segment (ionChange)="segmentChanged($event)" value="register">
+    <ion-segment-button value="login">
+      <ion-label>Login</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="register">
+      <ion-label>Register</ion-label>
+    </ion-segment-button>
+  </ion-segment>
   <ion-label>
     <h1 style="text-align:center;font-weight:bolder">Register</h1>
   </ion-label>
@@ -29,5 +37,4 @@
   </ion-item>
   <ion-button expand="full" (click)="register(email.value, password.value, name.value,gender.value)">Register
   </ion-button>
-  <ion-button expand="full" (click)="login()">Login</ion-button>
 </ion-content>

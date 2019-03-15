@@ -63,7 +63,7 @@ export class Tab2Page {
         .subscribe((successData) => {
           //Disable add budget button
           this.gotBudget = true;
-          this.budgetInfo = successData[0];
+          this.budgetInfo = successData;
           let diffInDays = date_fns.differenceInCalendarDays(date_fns.parse(this.budgetInfo.end), new Date())
           console.log(this.budgetInfo)
           this.suggestedBudgetPerDay = this.budgetInfo.budget / diffInDays;
@@ -72,7 +72,10 @@ export class Tab2Page {
 
         }, (err => {
           //Enable add budget button
+          console.log(err);
+
           this.gotBudget = false;
+
         }));
     });
   }
@@ -105,7 +108,7 @@ export class Tab2Page {
 
           if (firstElement.date == secondElement.date) {
             if (isToday) {
-              this.expenses_today += secondElement.amount;
+              this.expenses_today += Number(secondElement.amount);
             }
             console.log(firstIndex)
             this.transactions[this.transactions.length - 1].data.push(secondElement)

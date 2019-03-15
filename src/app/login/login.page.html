@@ -5,18 +5,55 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-label>
-    <h1 style="text-align:center;font-weight:bolder">Login</h1>
-  </ion-label>
-  <ion-item margin>
-    <ion-label position="floating">Email</ion-label>
-    <ion-input #email></ion-input>
-  </ion-item>
-  <ion-item margin>
-    <ion-label position="floating">Password</ion-label>
-    <ion-input type="password" #password></ion-input>
-  </ion-item>
+  <ion-segment (ionChange)="segmentChanged($event)" value="login">
+    <ion-segment-button value="login">
+      <ion-label>Login</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="register">
+      <ion-label>Register</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+  <div *ngIf="isLogin">
+    <ion-label>
+      <h1 style="text-align:center;font-weight:bolder">Login</h1>
+    </ion-label>
+    <ion-item margin>
+      <ion-label position="floating">Email</ion-label>
+      <ion-input #loginEmail></ion-input>
+    </ion-item>
+    <ion-item margin>
+      <ion-label position="floating">Password</ion-label>
+      <ion-input type="password" #loginPassword></ion-input>
+    </ion-item>
 
-  <ion-button expand="full" (click)="login(email.value, password.value)" margin>Login</ion-button>
-  <ion-button expand="full" (click)="register()" margin>Register</ion-button>
+    <ion-button expand="full" (click)="login(loginEmail.value, loginPassword.value)" margin>Submit</ion-button>
+  </div>
+
+
+  <div *ngIf="!isLogin">
+    <ion-label>
+      <h1 style="text-align:center;font-weight:bolder">Register</h1>
+    </ion-label>
+    <ion-item margin>
+      <ion-label position="floating">Email</ion-label>
+      <ion-input #email></ion-input>
+    </ion-item>
+    <ion-item margin>
+      <ion-label position="floating">Password</ion-label>
+      <ion-input type="password" #password></ion-input>
+    </ion-item>
+    <ion-item margin>
+      <ion-label position="floating">Name</ion-label>
+      <ion-input #name></ion-input>
+    </ion-item>
+    <ion-item margin>
+      <ion-label>Gender</ion-label>
+      <ion-select placeholder="Select One" #gender>
+        <ion-select-option value="female">Female</ion-select-option>
+        <ion-select-option value="male">Male</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-button expand="full" (click)="register(email.value, password.value, name.value,gender.value)">Register
+    </ion-button>
+  </div>
 </ion-content>

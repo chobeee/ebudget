@@ -15,9 +15,12 @@ export class RegisterPage implements OnInit {
   ngOnInit() {
   }
 
-  login() {
-    this.router.navigate(["login"]);
+  segmentChanged(ev) {
+    if (ev.detail.value == "login") {
+      ev.detail.value = "register";
+      this.router.navigate(["/login"]);
 
+    }
   }
 
   async presentAlert(message) {

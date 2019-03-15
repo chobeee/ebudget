@@ -9,13 +9,30 @@ import { Storage } from '@ionic/storage';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-
+  isLogin = true;
   constructor(private authService: AuthService,
     private router: Router,
     private alertController: AlertController,
     private storage: Storage) { }
 
   ngOnInit() {
+  }
+
+
+
+  register(email, password, name, gender) {
+    if (email != "" && password != "" && name != "") {
+      this.authService.register(email, password, name, gender).subscribe((successData) => {
+        if (successData.status == "success") {
+          this.presentAlert("Registration Success");
+        } else {
+          this.presentAlert(successData.message);
+        }
+
+      }, (error) => console.log(error))
+    } else {
+      this.presentAlert("Please fill all fields")
+    }
   }
 
   async presentAlert(message) {
@@ -25,6 +42,15 @@ export class LoginPage implements OnInit {
     });
 
     await alert.present();
+  }
+
+  segmentChanged(ev) {
+    if (ev.detail.value == "register") {
+      this.isLogin = false;
+    } else {
+      this.isLogin = true;
+
+    }
   }
 
   login(email, password) {
@@ -52,8 +78,6 @@ export class LoginPage implements OnInit {
     }
   }
 
-  register() {
-    this.router.navigate(["register"]);
-  }
+
 
 }
