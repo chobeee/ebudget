@@ -56,6 +56,13 @@ export class Tab1Page {
       return colors[index];
     }
   }
+
+  convertDecimalPlaces(percentage: number) {
+    return Number(percentage).toFixed(2);
+  }
+  calculate(firstNumber, secondNumber) {
+    return Number(firstNumber) + Number(secondNumber);
+  }
   async presentUnverifiedEmail() {
     const toast = await this.toastController.create({
       message: 'Please verify your email',
