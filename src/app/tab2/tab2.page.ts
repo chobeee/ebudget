@@ -19,7 +19,7 @@ export class Tab2Page {
   expenses_today = 0;
   isTodaysDate = true;
   gotBudget = false;
-  suggestedBudgetPerDay = 0;
+  suggestedBudgetPerDay: string;
   budgetInfo: any;
   user_data: any;
   week_array = Array.apply(null, Array());
@@ -49,11 +49,14 @@ export class Tab2Page {
 
   }
   //Check if there is a budget in this current week
+  convertDecimalPlaces(percentage: number) {
+    return Number(percentage).toFixed(2);
+  }
   getBudgetCurrentWeek() {
     this.budgetInfo = null;
     this.transactions = []
     this.expenses_today = 0;
-    this.suggestedBudgetPerDay = 0;
+    this.suggestedBudgetPerDay = "";
     this.storage.get("user_data").then((user_data) => {
       let data = JSON.parse(user_data);
       console.log(data);
@@ -66,7 +69,7 @@ export class Tab2Page {
           this.budgetInfo = successData;
           let diffInDays = date_fns.differenceInCalendarDays(date_fns.parse(this.budgetInfo.end), new Date())
           console.log(this.budgetInfo)
-          this.suggestedBudgetPerDay = this.budgetInfo.budget / diffInDays;
+          this.suggestedBudgetPerDay = this.convertDecimalPlaces(this.budgetInfo.budget / 7);
           //Get Transactions
           this.getTransactions();
 
