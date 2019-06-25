@@ -2,12 +2,13 @@ import { Component } from '@angular/core';
 import * as date_fns from "date-fns";
 import * as moment from 'moment'
 import { AlertController } from '@ionic/angular';
-import { ModalController } from '@ionic/angular';
+import { ModalController, Platform } from '@ionic/angular';
 import { DataService } from '../services/data.service';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 import { BudgetPage } from '../modals/budget/budget.page';
 import { TransactionPage } from '../modals/transaction/transaction.page';
+import { SearchDatePage } from '../modals/search-date/search-date.page';
 
 @Component({
   selector: 'app-tab2',
@@ -25,6 +26,7 @@ export class Tab2Page {
   week_array = Array.apply(null, Array());
   budget: number;
   weekBoardData: any;
+  active = 'weekly';
 
   date: any;
   //Today Date
@@ -45,13 +47,26 @@ export class Tab2Page {
     private dataService: DataService,
     private router: Router,
     private storage: Storage,
-    private modalController: ModalController) {
+    private modalController: ModalController,
+    private plt: Platform) {
 
   }
-  //Check if there is a budget in this current week
+
+  
+
+    //Check if there is a budget in this current week
   convertDecimalPlaces(percentage: number) {
     return Number(percentage).toFixed(2);
   }
+
+  sum(a, b): number {
+    return  (Number(a) + Number(b))
+  }
+
+  minus(a,b){
+    return ((Number(a) - Number(b)))
+  }
+
   getBudgetCurrentWeek() {
     this.budgetInfo = null;
     this.transactions = []
@@ -69,23 +84,22 @@ export class Tab2Page {
           this.budgetInfo = successData;
           let diffInDays = date_fns.differenceInCalendarDays(date_fns.parse(this.budgetInfo.end), new Date())
           console.log(this.budgetInfo)
-          this.suggestedBudgetPerDay = this.convertDecimalPlaces(this.budgetInfo.budget / 7);
+          this.suggestedBudgetPerDay = this.convertDecimalPlaces((Number(this.budgetInfo.budget) + Number(this.budgetInfo.expenses))/ 7);
           //Get Transactions
+          console.log(this.suggestedBudgetPerDay)
           this.getTransactions();
 
         }, (err => {
           //Enable add budget button
           console.log(err);
-
           this.gotBudget = false;
-
         }));
     });
   }
 
   getTransactions() {
     this.dataService.getTransactions(this.budgetInfo.week_id).subscribe((successData) => {
-      console.log(successData)
+      console.log(successData);
       this.transactions = [];
       let close = [];
       let isToday = false;
@@ -137,6 +151,7 @@ export class Tab2Page {
     this.isTodaysDate = true;
     this.getBudgetCurrentWeek();
   }
+
   moveWeek(direction) {
     let newDate: any;
     if (direction == "forward") {
@@ -160,7 +175,6 @@ export class Tab2Page {
       this.isTodaysDate = false;
     }
     this.getBudgetCurrentWeek();
-
 
   }
 
@@ -205,6 +219,46 @@ export class Tab2Page {
     return await modal.present();
   }
 
+  async presentSearchModal() {
+    const modal = await this.modalController.create({
+      component: SearchDatePage,
+      componentProps: {
+        budgetInfo: this.budgetInfo,
+        todayDate: date_fns.format(new Date(), "YYYY-MM-DD")
+      }
+    });
+
+    modal.onWillDismiss().then((val) => {
+      console.log(val);
+          //Current Date Controlled by user
+      this.currentStartWeekDate = date_fns.startOfWeek(val.data.startDate, { weekStartsOn: 1 });
+      this.currentEndOfWeekDate = date_fns.endOfWeek(val.data.endDate, { weekStartsOn: 1 });
+
+      //Display for user
+      this.displayCurrentStartWeek = date_fns.format(this.currentStartWeekDate, "DD MMM");
+      this.displayCurrentEndWeek = date_fns.format(this.currentEndOfWeekDate, "DD MMM");
+      this.currentYear = date_fns.getYear(this.currentEndOfWeekDate);
+
+      this.getBudgetCurrentWeek();
+    });
+    return await modal.present();
+  }
+
+  getCustom(){
+    console.log("custom");
+  }
+
+  segmentChanged(ev: any) {
+    this.active = ev.detail.value;
+    // console.log(this.active);
+    // console.log('Segment changed', ev);
+    if(this.active == 'weekly'){
+      this.getBudgetCurrentWeek();
+    }else{
+      this.getCustom();
+    }
+  }
+
 
   ngOnInit(): void {
 
@@ -228,6 +282,8 @@ export class Tab2Page {
     console.log(this.week_array)
 
   }
+
+
   ionViewWillEnter() {
 
     this.weekBoardData = []

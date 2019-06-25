@@ -7,6 +7,7 @@ import { IonicStorageModule } from '@ionic/storage';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CalendarModule, CalendarDateFormatter, CalendarEventTitleFormatter, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -29,6 +30,7 @@ import { AppComponent } from './app.component';
   providers: [
     StatusBar,
     SplashScreen,
+    LocalNotifications,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

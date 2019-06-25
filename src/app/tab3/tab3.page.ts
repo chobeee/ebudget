@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
+import { ModalController } from '@ionic/angular';
+import { EditPage } from '../edit/edit.page';
 
 @Component({
   selector: 'app-tab3',
@@ -10,8 +12,11 @@ import { Storage } from '@ionic/storage';
 export class Tab3Page {
   user_data: any;
 
-  constructor(private router: Router,
-    private storage: Storage) { }
+  constructor(
+    private router: Router,
+    private storage: Storage,
+    private modalController: ModalController,
+    ) { }
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
@@ -27,5 +32,13 @@ export class Tab3Page {
 
     })
 
+  }
+
+  async presentModal() {
+    const modal = await this.modalController.create({
+      component: EditPage,
+      componentProps: { userData: this.user_data}
+    });
+    return await modal.present();
   }
 }

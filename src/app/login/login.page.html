@@ -1,10 +1,14 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>EBudget</ion-title>
-  </ion-toolbar>
-</ion-header>
 
-<ion-content padding>
+
+  <ion-content>
+          <div class="bg-img" padding>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
   <ion-segment (ionChange)="segmentChanged($event)" value="login">
     <ion-segment-button value="login">
       <ion-label>Login</ion-label>
@@ -15,7 +19,7 @@
   </ion-segment>
   <div *ngIf="isLogin">
     <ion-label>
-      <h1 style="text-align:center;font-weight:bolder">Login</h1>
+      <h1 style="text-align:center;font-weight:bolder"></h1>
     </ion-label>
     <ion-item margin>
       <ion-label position="floating">Email</ion-label>
@@ -32,7 +36,7 @@
 
   <div *ngIf="!isLogin">
     <ion-label>
-      <h1 style="text-align:center;font-weight:bolder">Register</h1>
+      <h1 style="text-align:center;font-weight:bolder"></h1>
     </ion-label>
     <ion-item margin>
       <ion-label position="floating">Email</ion-label>
@@ -41,6 +45,10 @@
     <ion-item margin>
       <ion-label position="floating">Password</ion-label>
       <ion-input type="password" #password></ion-input>
+    </ion-item>
+    <ion-item margin>
+      <ion-label position="floating">Confirm Password</ion-label>
+      <ion-input type="password" #confirmpassword></ion-input>
     </ion-item>
     <ion-item margin>
       <ion-label position="floating">Name</ion-label>
@@ -53,7 +61,9 @@
         <ion-select-option value="male">Male</ion-select-option>
       </ion-select>
     </ion-item>
-    <ion-button expand="full" (click)="register(email.value, password.value, name.value,gender.value)">Register
+    <ion-button expand="full" (click)="register(email.value, password.value, name.value,gender.value, confirmpassword.value)">Register
     </ion-button>
   </div>
-</ion-content>
+
+</div>
+  </ion-content>

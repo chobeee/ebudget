@@ -28,6 +28,7 @@ export class TransactionPage implements OnInit {
   back() {
     this.modalController.dismiss();
   }
+  
   async presentSuccessToast() {
     const toast = await this.toastController.create({
       message: 'Transaction Added..',

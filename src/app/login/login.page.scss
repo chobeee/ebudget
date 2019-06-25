@@ -1,0 +1,22 @@
+.bg-img{
+    background-image: url('/assets/img/bg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    height:100%;
+  }
+
+ion-segment {
+    --indicator-color: #ffffff;
+    --indicator-color-checked: #57192e;
+    --color: #ffffff;
+    --color-checked: #57192e;
+}
+
+ion-item {
+    background-color: #fac42c;
+}
+
+ion-button {
+    color: #f8f8f8;
+}

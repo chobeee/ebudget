@@ -12,7 +12,9 @@ const routes: Routes = [
   },
   { path: 'budget', loadChildren: './modals/budget/budget.module#BudgetPageModule' },
   { path: 'transaction', loadChildren: './modals/transaction/transaction.module#TransactionPageModule' },
-  { path: 'categories', loadChildren: './modals/categories/categories.module#CategoriesPageModule' },
+  { path: 'categories', loadChildren: './modals/categories/categories.module#CategoriesPageModule' },  { path: 'edit', loadChildren: './edit/edit.module#EditPageModule' },
+  { path: 'search-date', loadChildren: './modals/search-date/search-date.module#SearchDatePageModule' },
+
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
