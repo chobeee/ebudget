@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
 import * as date_fns from "date-fns";
 import { DataService } from '../services/data.service';
-import { PopoverController, ToastController } from '@ionic/angular';
+import { PopoverController, ToastController, Platform, AlertController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
+
+
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
@@ -11,10 +14,66 @@ import { Storage } from '@ionic/storage';
 export class Tab1Page {
   week_array = Array.apply(null, Array());
   leaderboard = Array.apply(null, Array());
+  tips: any;
 
   constructor(private dataService: DataService,
     public toastController: ToastController,
-    public storage: Storage) { }
+    public storage: Storage, private plt: Platform, private localNotifications: LocalNotifications,
+    private alertController: AlertController ) {
+
+      // this.plt.ready().then((rdy) => {
+      //   this.localNotifications.on('click').subscribe(notification => {
+      //     let data = JSON.parse(notification.mydata);
+      //     console.log(data);
+      //   });
+      // });
+      
+      this.dataService.getTip().subscribe((successData) => {
+        console.log(successData)
+        this.tips = successData;
+  
+        for(let a = 10; a < 15; a++){
+          let index : number = Number.parseInt(Math.abs(Math.random() * Object.keys(this.tips).length - 1) + "");
+          console.log(index);
+          this.scheduleNotif(this.tips[index], (a ) * 2);
+        }
+
+        
+  
+      }, (error) => console.log(error))
+
+     }
+
+     
+
+
+
+     async presentAlert(tip) {
+      console.log(tip);
+      //let icon = `<ion-thumbnail slot='start'><img [src]='assets/icon/bills_icon.png'></ion-thumbnail>`;
+
+      const alert = await this.alertController.create({
+        header: 'A Tip to save money',
+        subHeader: tip.categories ,
+        message: tip.content,
+        buttons: ['Dismiss']
+      });
+  
+      await alert.present();
+    }
+     
+  scheduleNotif(tip, delay){
+    this.localNotifications.schedule({
+      id: 1,
+      title: 'A tip to save money',
+      text: 'Category: ' + tip.categories + "\n " + tip.content,
+      trigger: {at: new Date(new Date().getTime() + delay * 1000)},
+      led: 'FF0000',
+      foreground: true,
+      smallIcon: 'assets/icon/bills_icon.png',
+      icon: 'assets/icon/fee.png'
+    });
+  }
 
 
   ngOnInit(): void {
@@ -33,6 +92,17 @@ export class Tab1Page {
 
   }
   ionViewWillEnter() {
+    this.dataService.getTip().subscribe((successData) => {
+      console.log(successData)
+      this.tips = successData;
+
+      let index : number = Number.parseInt(Math.abs(Math.random() * Object.keys(this.tips).length - 1) + "");
+      console.log(index);
+      this.presentAlert(this.tips[index]);
+
+    }, (error) => console.log(error))
+
+
     this.storage.get("isNotified").then((isNotified) => {
       if (!isNotified) {
         this.storage.get("user_data").then((user_data) => {
@@ -79,7 +149,7 @@ export class Tab1Page {
 
   getLeaderBoard(start, end) {
     this.dataService.getLeaderboard(start, end).subscribe((successData) => {
-      console.log(successData)
+      console.log(successData);
       this.leaderboard = successData;
 
       // //Sort it

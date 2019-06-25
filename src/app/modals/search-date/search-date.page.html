@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar color="light">
+    <ion-buttons slot="start">
+      <ion-button (click)="back();">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>
+      <h3 style="font-weight:bold;font-size: 1em">Search by date</h3>
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="search()">
+        <h5 style="font-weight:bold;font-size: .8em">Search</h5>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+
+    <ion-item>
+        <ion-label>Start Date</ion-label>
+        <ion-datetime display-format="DD MMM YYYY" picker-format="YYYY-MM-DD" placeholder="Select Date" [(ngModel)]="startDate"></ion-datetime>
+    </ion-item>
+
+    <ion-item>
+        <ion-label>End Date</ion-label>
+        <ion-datetime display-format="DD MMM YYYY" picker-format="YYYY-MM-DD" placeholder="Select Date" [(ngModel)]="endDate"></ion-datetime>
+    </ion-item>
+  
+</ion-content>

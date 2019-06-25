@@ -1,12 +1,12 @@
 <ion-header>
-  <ion-toolbar color="tertiary">
+  <ion-toolbar color="warning">
     <ion-label slot="start" margin *ngIf="budgetInfo">
-      <p>Expenses</p>
-      <h6>₱ {{budgetInfo.expenses}}</h6>
+      <p style="color: #57192e;">Expenses</p>
+      <h6 style="color: #57192e;">₱ {{budgetInfo.expenses}}</h6>
     </ion-label>
     <ion-label slot="start" margin *ngIf="budgetInfo">
-      <p>Budget</p>
-      <h6>₱ {{budgetInfo.budget}}</h6>
+      <p style="color: #57192e;">Budget</p>
+      <h6 style="color: #57192e;">₱ {{ sum(budgetInfo.budget,budgetInfo.expenses)}}</h6>
     </ion-label>
     <ion-buttons slot="end">
       <ion-button (click)="presentModal();" [disabled]="gotBudget || !isTodaysDate">
@@ -17,19 +17,32 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-  <ion-toolbar [color]="isTodaysDate ? 'tertiary': 'medium'">
-    <ion-buttons slot="start">
+
+      <!-- Default Segment -->
+<ion-segment (ionChange)="segmentChanged($event)">
+    <ion-segment-button value="weekly">
+      <ion-label>Weekly</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="custom">
+      <ion-label>Custom</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+  
+
+  <ion-toolbar [color]="active == 'weekly' ? (isTodaysDate ? 'primary': 'medium') : 'primary'">
+    <ion-buttons *ngIf="active == 'weekly'" slot="start">
       <ion-button (click)="moveWeek('backward');">
         <ion-icon slot="icon-only" name="arrow-dropleft"></ion-icon>
       </ion-button>
     </ion-buttons>
+
     <ion-title>
       <h5 style="font-size:.8em; font-weight:bolder;text-align: center;">{{displayCurrentStartWeek}} -
         {{displayCurrentEndWeek}}
         {{currentYear}}</h5>
     </ion-title>
 
-    <ion-buttons slot="end">
+    <ion-buttons *ngIf="active == 'weekly'" slot="end">
       <ion-button (click)="moveWeek('forward');">
         <ion-icon slot="icon-only" name="arrow-dropright"></ion-icon>
       </ion-button>
@@ -41,11 +54,13 @@
 
 </ion-header>
 
+
 <ion-content>
   <ion-item *ngIf="budgetInfo">
     <ion-label style="text-align:center;color:gray">
       <p>Expenses Today: ₱ {{expenses_today}}</p>
       <p>Suggested Budget Per Day: ₱ {{suggestedBudgetPerDay}}</p>
+      <p>Today's Saving: ₱ {{minus(suggestedBudgetPerDay, expenses_today)}}</p>
     </ion-label>
   </ion-item>
   <ion-card *ngFor="let transaction of transactions">
@@ -76,4 +91,9 @@
     </ion-fab-button>
   </ion-fab>
 
+  <ion-fab color="tertiary" vertical="bottom" horizontal="start" slot="fixed">
+    <ion-fab-button (click)="presentSearchModal();">
+      <ion-icon name="search"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

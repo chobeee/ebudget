@@ -9,24 +9,25 @@ import { async } from '@angular/core/testing';
   providedIn: 'root'
 })
 export class AuthService {
-  server_ip = "http://localhost/ebudget";
+  server_ip = "http://192.168.0.14/ebudget";
 
   constructor(private http: HttpClient) { }
 
   login(email, pwd) {
+    console.log(email, pwd)
     const url = this.server_ip + "/auth/login.php";
     const data = {
       email,
       pwd
     }
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      })
-    };
+    // const httpOptions = {
+    //   headers: new HttpHeaders({
+    //     'Content-Type': 'application/json',
+    //     'Access-Control-Allow-Origin': '*',
+    //   })`
+    // };
 
-    return this.http.post<login>(url, data, httpOptions);
+    return this.http.post<login>(url, JSON.stringify(data));
   }
 
   register(email, password, name, gender) {

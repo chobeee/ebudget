@@ -8,7 +8,7 @@ import { async } from '@angular/core/testing';
   providedIn: 'root'
 })
 export class DataService {
-  server_ip = "http://localhost/ebudget/api";
+  server_ip = "http://192.168.0.14/ebudget/api";
   constructor(private http: HttpClient) { }
   getLeaderboard(start, end) {
     const url = this.server_ip + "/leaderboard.php";
@@ -33,6 +33,7 @@ export class DataService {
     };
     return this.http.post(url, transact_data, httpOptions);
   }
+  
   getTransactions(week_id) {
     const url = this.server_ip + "/getTransact.php";
     const params = new HttpParams().set("week_id", week_id)
@@ -68,6 +69,21 @@ export class DataService {
     };
     return this.http.get(url, httpOptions);
   }
+
+
+  getTip() {
+    const url = this.server_ip + "/getTip.php";
+    const params = new HttpParams();
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      }),
+      params
+    };
+    return this.http.get(url, httpOptions);
+  }
+
 
   isCurrentWeekParticipant(id, start, end) {
     const url = this.server_ip + "isParticipant.php";

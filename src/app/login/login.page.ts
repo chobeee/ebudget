@@ -20,17 +20,23 @@ export class LoginPage implements OnInit {
 
 
 
-  register(email, password, name, gender) {
+  register(email, password, name, gender, confirmpassword) {
     if (email != "" && password != "" && name != "") {
+      if(confirmpassword == password){
       this.authService.register(email, password, name, gender).subscribe((successData) => {
-        if (successData.status == "success") {
-          this.presentAlert("Registration Success");
-        } else {
+        if(confirmpassword != password){
+          this.presentAlert("Password Do Not Match");
+        }  
+        else {
           this.presentAlert(successData.message);
         }
 
       }, (error) => console.log(error))
-    } else {
+    }else{
+      this.presentAlert("Passwords do not match")
+    }
+  }
+    else {
       this.presentAlert("Please fill all fields")
     }
   }
