@@ -8,7 +8,8 @@ import { async } from '@angular/core/testing';
   providedIn: 'root'
 })
 export class DataService {
-  server_ip = "http://192.168.0.14/ebudget/api";
+  //server_ip = "http://192.168.0.16/ebudget/api";
+  server_ip = "http://localhost/ebudget/api";
   constructor(private http: HttpClient) { }
   getLeaderboard(start, end) {
     const url = this.server_ip + "/leaderboard.php";
@@ -33,9 +34,44 @@ export class DataService {
     };
     return this.http.post(url, transact_data, httpOptions);
   }
+
+  addCustomTransaction(transact_data) {
+    const url = this.server_ip + "/addCustomTransact.php";
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      })
+    };
+    return this.http.post(url, transact_data, httpOptions);
+  }
+
+  addCustomBudget(custom_data){
+    const url = this.server_ip + "/addCustomBudget.php";
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      })
+    };
+    return this.http.post(url, custom_data, httpOptions);
+  }
   
   getTransactions(week_id) {
     const url = this.server_ip + "/getTransact.php";
+    const params = new HttpParams().set("week_id", week_id)
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      }),
+      params
+    };
+    return this.http.get<Transactions[]>(url, httpOptions);
+  }
+
+  getCustomTransactions(week_id) {
+    const url = this.server_ip + "/getCustomTransact.php";
     const params = new HttpParams().set("week_id", week_id)
     const httpOptions = {
       headers: new HttpHeaders({
@@ -69,6 +105,20 @@ export class DataService {
     };
     return this.http.get(url, httpOptions);
   }
+
+  getCustomBudget(id) {
+    const url = this.server_ip + "/getCustomBudget.php";
+    const params = new HttpParams().set("id", id);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      }),
+      params
+    };
+    return this.http.get(url, httpOptions);
+  }
+
 
 
   getTip() {

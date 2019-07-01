@@ -11,6 +11,7 @@ import { DataService } from 'src/app/services/data.service';
 export class TransactionPage implements OnInit {
   @Input() budgetInfo: any;
   @Input() todayDate: any;
+  @Input() custom: any;
   selectedCategory: any;
   constructor(private modalController: ModalController,
     private toastController: ToastController,
@@ -38,9 +39,11 @@ export class TransactionPage implements OnInit {
   }
 
   submit(amt, category, note) {
+    console.log(this.budgetInfo);
     if (amt != "" && category != "") {
       let data = {
         week_id: this.budgetInfo.week_id,
+        custom_id: this.budgetInfo.custom_id,
         amount: amt,
         note,
         name: this.selectedCategory.name,
@@ -48,6 +51,15 @@ export class TransactionPage implements OnInit {
         date: this.todayDate
       }
       console.log(data)
+
+      if(this.custom){
+        this.dataService.addCustomTransaction(data).subscribe((successData) => {
+          console.log(successData);
+          this.presentSuccessToast();
+          this.modalController.dismiss();
+        }, (err => console.error(err)))
+        return;
+      }
       this.dataService.addTransaction(data).subscribe((successData) => {
         console.log(successData);
         this.presentSuccessToast();

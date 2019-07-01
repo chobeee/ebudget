@@ -1,0 +1,115 @@
+<ion-header>
+  <ion-navbar>
+    <ion-toolbar>
+    <ion-title>Newsfeed</ion-title>
+   
+  </ion-toolbar>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding
+  style="background:url(assets/img/AlCdC4GzQciyHkrVSYuW_background.jpg) no-repeat center;background-size:cover;"
+  id="page1">
+  
+  <ion-item text-wrap *ngIf="!isThereAnyVideos">
+    <ion-icon name="alert" item-start></ion-icon>
+    <h2>No results</h2>
+    <h3>No video results</h3>
+    <p>No video title contains the word "{{searchText}}"</p>
+</ion-item>
+
+  <div *ngFor="let video of videos; let i = index">
+  <ion-card *ngIf="video.videoVisible">
+
+    <ion-item >
+      <ion-avatar item-left>
+        <img src="../assets/images/avatar.png" />
+      </ion-avatar>
+      <h2>{{ video.title }}</h2>
+      <p>{{ video.user }}</p>
+    </ion-item>
+
+    <ion-card-content>
+      <video controls="controls" preload="auto" webkit-playsinline="webkit-playsinline" class="videoPlayer">
+        <source src="{{glo.ip}}/{{ video.location }}#t=0.5" type="video/mp4" /></video>
+      <ion-item text-center>
+        <ion-icon padding (click)="toggleHeart(i)" [style.color]="'#EF3B51'"
+          name="{{video.favorite ? 'heart' : 'heart-outline'}}"></ion-icon>
+
+        <ion-icon padding (click)="viewComments(i)" name="clipboard" [style.color]="'#EF3B58'"></ion-icon>
+
+      </ion-item>
+    </ion-card-content>
+
+    <ion-item *ngIf="video.commentCount" class="withLines">
+      <h6 (click)="viewComments(i)" style="float: right;">{{video.commentCount}}
+        <span *ngIf="video.commentCount == 1"> Comment</span>
+        <span *ngIf="video.commentCount != 1"> Comments</span>
+      </h6>
+    </ion-item>
+
+    <ion-list *ngIf="video.visible">
+
+      <ion-item *ngIf="!isEditing">
+
+        <ion-avatar item-start text-center>
+          <ion-icon style="font-size: 42px;" name="person" [style.color]="'#EF3B51'"></ion-icon>
+        </ion-avatar>
+        <ion-icon (click)="putComment(i)" item-end name="send"></ion-icon>
+        <textarea #myComment id="myComment" placeholder="Write a comment..." rows="1" maxLength="500"
+          (input)="resize($event)" [(ngModel)]="video.writeComment">
+          </textarea>
+      </ion-item>
+
+      <ion-item *ngFor="let comment of video.comments; let j = index" text-wrap>
+        <ion-avatar item-start text-center>
+          <ion-icon style="font-size: 42px;" name="person" [style.color]="'#EF3B51'"></ion-icon>
+        </ion-avatar>
+        <h2 class="ion-text-capitalize" style="padding-bottom: 10px;">{{comment.fullname}}</h2>
+        <h3 *ngIf="!comment.isEditing">{{comment.comment}}</h3>
+
+        <div *ngIf="comment.isEditing">
+            <textarea #editComment id="editComment" placeholder="Write a comment..." rows="1" maxLength="500"
+              (input)="resizeEdit(i,j)" [(ngModel)]="comment.editComment">
+           </textarea>
+           <ion-icon item-end text-center id="commitEdit" 
+            (click)="changeComment(i,j)" item-end name="send"></ion-icon>
+        </div>
+
+        <div *ngIf="!comment.isEditing" item-end>
+          <div *ngIf="comment.userid == user_id" style="float: right;">
+            <ion-icon name="more" (click)="commentOptions($event, i, j)"></ion-icon>
+          </div>
+
+          <br>
+          <br>
+          <p *ngIf="!comment.isEditing">{{comment.timestamp | date: format: "MMM d, y h:mm a"}}</p>
+
+        </div>
+      </ion-item>
+
+      <ion-item *ngIf="video.commentCountDisplayed < video.commentCount && video.visible" (click)="viewMoreComments(i)">
+        <ion-icon style="font-size: 32px;" name="arrow-dropdown" item-end></ion-icon>
+        View more comments
+      </ion-item>
+
+    </ion-list>
+
+  </ion-card>
+</div>
+  <ion-fab bottom right>
+    <button id="notif-btn" (click)="showNotif()" ion-fab>
+      <ion-icon name="notifications-outline">
+      </ion-icon>
+      <ion-badge *ngIf="numberOfNotif" id="notif-badge">{{numberOfNotif}}</ion-badge>
+    </button>
+  </ion-fab>
+
+  <!-- <ion-tabs>
+      <ion-tab (click)="showNotif()" title="Notif" tabIcon="notifications-outline" tabBadge="3" badge tabBadgeStyle="danger">
+        </ion-tab>
+  </ion-tabs> -->
+
+
+
+</ion-content>

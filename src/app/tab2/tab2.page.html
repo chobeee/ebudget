@@ -9,7 +9,7 @@
       <h6 style="color: #57192e;">₱ {{ sum(budgetInfo.budget,budgetInfo.expenses)}}</h6>
     </ion-label>
     <ion-buttons slot="end">
-      <ion-button (click)="presentModal();" [disabled]="gotBudget || !isTodaysDate">
+      <ion-button (click)="presentModal();" [disabled]="(gotBudget || !isTodaysDate) || (active != 'weekly' && hasCustom)">
         <ion-icon slot="icon-only" name="cash"></ion-icon>
       </ion-button>
       <ion-button (click)="reset();">
@@ -37,9 +37,13 @@
     </ion-buttons>
 
     <ion-title>
-      <h5 style="font-size:.8em; font-weight:bolder;text-align: center;">{{displayCurrentStartWeek}} -
+      <h5 *ngIf="active == 'weekly'" style="font-size:.8em; font-weight:bolder;text-align: center;">{{displayCurrentStartWeek}} -
         {{displayCurrentEndWeek}}
         {{currentYear}}</h5>
+
+        <h5 *ngIf="active != 'weekly'" style="font-size:.8em; font-weight:bolder;text-align: center;">{{customStart}} -
+          {{customEnd}}
+          {{currentYear}}</h5>
     </ion-title>
 
     <ion-buttons *ngIf="active == 'weekly'" slot="end">
@@ -86,14 +90,14 @@
   </ion-card>
 
   <ion-fab color="tertiary" vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="presentTransactionModal();" [disabled]="!gotBudget || !isTodaysDate">
+    <ion-fab-button (click)="presentTransactionModal();" [disabled]="(!gotBudget || !isTodaysDate)  || (active != 'weekly' && !isBetween)">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-
+<!-- 
   <ion-fab color="tertiary" vertical="bottom" horizontal="start" slot="fixed">
-    <ion-fab-button (click)="presentSearchModal();">
+    <ion-fab-button *ngIf="active != 'weekly' "(click)="presentSearchModal();">
       <ion-icon name="search"></ion-icon>
     </ion-fab-button>
-  </ion-fab>
+  </ion-fab> -->
 </ion-content>

@@ -62,6 +62,7 @@ export class LoginPage implements OnInit {
   login(email, password) {
     if (email != "" && password != "") {
       this.authService.login(email, password).subscribe((successData) => {
+        console.log(successData);
         let user_data = {
           id: successData.id,
           email: successData.email,

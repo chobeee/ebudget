@@ -9,7 +9,7 @@ import { async } from '@angular/core/testing';
   providedIn: 'root'
 })
 export class AuthService {
-  server_ip = "http://192.168.0.14/ebudget";
+  server_ip = "http://localhost/ebudget";
 
   constructor(private http: HttpClient) { }
 

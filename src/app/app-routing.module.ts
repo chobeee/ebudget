@@ -14,6 +14,7 @@ const routes: Routes = [
   { path: 'transaction', loadChildren: './modals/transaction/transaction.module#TransactionPageModule' },
   { path: 'categories', loadChildren: './modals/categories/categories.module#CategoriesPageModule' },  { path: 'edit', loadChildren: './edit/edit.module#EditPageModule' },
   { path: 'search-date', loadChildren: './modals/search-date/search-date.module#SearchDatePageModule' },
+  { path: 'comments', loadChildren: './comments/comments.module#CommentsPageModule' },
 
 ];
 @NgModule({

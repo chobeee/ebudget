@@ -27,6 +27,10 @@ export class Tab2Page {
   budget: number;
   weekBoardData: any;
   active = 'weekly';
+  customStart: any;
+  customEnd: any;
+  isBetween = true;
+  hasCustom = false;
 
   date: any;
   //Today Date
@@ -74,6 +78,7 @@ export class Tab2Page {
     this.suggestedBudgetPerDay = "";
     this.storage.get("user_data").then((user_data) => {
       let data = JSON.parse(user_data);
+      this.user_data = JSON.parse(user_data);
       console.log(data);
       this.dataService.getBudget(data.id,
         date_fns.format(this.currentStartWeekDate, "YYYY-MM-DD"),
@@ -141,6 +146,12 @@ export class Tab2Page {
 
   }
   reset() {
+
+    if(this.active != 'weekly'){
+      this.getCustom();
+      return;
+    }
+
     //Reset into todays date
     this.currentStartWeekDate = this.todayStartWeekDate;
     this.currentEndOfWeekDate = this.todayEndWeekDate;
@@ -179,41 +190,112 @@ export class Tab2Page {
   }
 
   async presentModal() {
-    let displayDates = {
-      currentStartWeek: this.displayCurrentStartWeek,
-      currentEndWeek: this.displayCurrentEndWeek,
-      currentYear: this.currentYear
-    };
-    let realDates = {
-      currentStartWeek: date_fns.format(this.currentStartWeekDate, "YYYY-MM-DD"),
-      currentEndWeek: date_fns.format(this.currentEndOfWeekDate, "YYYY-MM-DD"),
-      month: date_fns.getMonth(this.currentEndOfWeekDate),
-      year: date_fns.getYear(this.currentEndOfWeekDate)
+    if(this.active == 'weekly'){
+      this.presentModalWeekly();
+    }else{
+      this.presentModalCustom();
     }
+   
+  }
+
+  async presentModalCustom(){
     const modal = await this.modalController.create({
-      component: BudgetPage,
+      component: SearchDatePage,
       componentProps: {
-        displayDates,
-        realDates
+        budgetInfo: this.budgetInfo,
+        todayDate: date_fns.format(new Date(), "YYYY-MM-DD"),
+        title: 'Create custom date',
+        button: 'Create',
+        isCreate: true
       }
     });
+
     modal.onWillDismiss().then((val) => {
-      this.getBudgetCurrentWeek();
+      if(!val.data.budget){
+        return;
+      }
+
+      let custom_data = {
+        user_id: this.user_data.id,
+        startDate:  date_fns.format(val.data.startDate, "YYYY-MM-DD"),
+        endDate: date_fns.format(val.data.endDate, "YYYY-MM-DD"),
+        budget: val.data.budget
+      };
+      console.log(custom_data);
+      this.dataService.addCustomBudget(custom_data).subscribe(data => {
+        console.log(data);
+        if(data['message'] == 'Custom Budget Added'){
+          console.log('success');
+          this.reset();
+        }else{
+          console.log(data['message']);
+          
+        }
+      });
     });
     return await modal.present();
+  }
 
+  // async presentError(){
+  //   const alert = await this.alertController.create({
+  //     header: 'Error',
+  //     subHeader: "Same date" ,
+  //     message: ,
+  //     buttons: ['Dismiss']
+  //   });
+
+  //   await alert.present();
+  // }
+
+ async presentModalWeekly(){
+  let displayDates = {
+    currentStartWeek: this.displayCurrentStartWeek,
+    currentEndWeek: this.displayCurrentEndWeek,
+    currentYear: this.currentYear
+  };
+  let realDates = {
+    currentStartWeek: date_fns.format(this.currentStartWeekDate, "YYYY-MM-DD"),
+    currentEndWeek: date_fns.format(this.currentEndOfWeekDate, "YYYY-MM-DD"),
+    month: date_fns.getMonth(this.currentEndOfWeekDate),
+    year: date_fns.getYear(this.currentEndOfWeekDate)
+  }
+  const modal = await this.modalController.create({
+    component: BudgetPage,
+    componentProps: {
+      displayDates,
+      realDates
+    }
+  });
+  modal.onWillDismiss().then((val) => {
+    this.getBudgetCurrentWeek();
+  });
+  return await modal.present();
   }
 
   async presentTransactionModal() {
+
+    // let testData = {
+    //   week_id: 7
+    // }
+
+    let custom = false;
+    if(this.active != "weekly"){
+      custom = true;
+    }
     const modal = await this.modalController.create({
       component: TransactionPage,
       componentProps: {
         budgetInfo: this.budgetInfo,
-        todayDate: date_fns.format(new Date(), "YYYY-MM-DD")
+        todayDate: date_fns.format(new Date(), "YYYY-MM-DD"),
+        custom: custom
       }
     });
 
     modal.onWillDismiss().then((val) => {
+      if(custom){
+        this.getCustom();
+        return;
+      }
       this.getBudgetCurrentWeek();
     });
     return await modal.present();
@@ -224,7 +306,9 @@ export class Tab2Page {
       component: SearchDatePage,
       componentProps: {
         budgetInfo: this.budgetInfo,
-        todayDate: date_fns.format(new Date(), "YYYY-MM-DD")
+        todayDate: date_fns.format(new Date(), "YYYY-MM-DD"),
+        title: 'Search by date',
+        button: 'Search'
       }
     });
 
@@ -246,9 +330,94 @@ export class Tab2Page {
 
   getCustom(){
     console.log("custom");
+    this.budgetInfo = null;
+    this.transactions = []
+    this.expenses_today = 0;
+    this.suggestedBudgetPerDay = "";
+    this.storage.get("user_data").then((user_data) => {
+      let data = JSON.parse(user_data);
+      this.user_data = JSON.parse(user_data);
+      console.log(data);
+      this.dataService.getCustomBudget(data.id)
+        .subscribe((successData) => {
+          //Disable add budget button
+          this.gotBudget = true;
+          this.budgetInfo = successData;
+          let diffInDays = date_fns.differenceInCalendarDays(date_fns.parse(this.budgetInfo.end), date_fns.parse(this.budgetInfo.start))
+          console.log(this.budgetInfo)
+          this.customStart = date_fns.format(this.budgetInfo.start, "DD MMM");
+          this.customEnd = date_fns.format(this.budgetInfo.end, "DD MMM")
+          this.currentYear = date_fns.getYear(this.budgetInfo.end);
+          this.suggestedBudgetPerDay = this.convertDecimalPlaces((Number(this.budgetInfo.budget) + Number(this.budgetInfo.expenses))/ (diffInDays+1));
+          //Get Transactions
+          console.log(this.suggestedBudgetPerDay)
+          this.hasCustom = true;
+          this.getCustomTransactions();
+          if(date_fns.isBefore(this.budgetInfo.start, new Date()) && 
+          date_fns.isAfter(this.budgetInfo.end, new Date())){
+            this.isBetween = true;
+          }else{
+            this.isBetween = false;
+          }
+
+          console.log(this.isBetween);
+
+        }, (err => {
+          //Enable add budget button
+          console.log(err);
+          this.gotBudget = false;
+          this.isBetween = false;
+          this.hasCustom = false;
+        }));
+    });
+
+  }
+
+
+  getCustomTransactions(){
+    this.dataService.getCustomTransactions(this.budgetInfo.custom_id).subscribe((successData) => {
+      console.log(successData);
+      this.transactions = [];
+      let close = [];
+      let isToday = false;
+
+      successData.forEach((firstElement, firstIndex) => {
+
+        if (close.includes(firstElement.date)) return;
+        this.transactions.push({
+          name: firstElement.date,
+          data: [],
+          day: date_fns.format(firstElement.date, "dddd"),
+          beautyDate: date_fns.format(firstElement.date, "DD MMMM YYYY")
+        });
+        console.log(firstIndex)
+        close.push(firstElement.date)
+
+        if (date_fns.isEqual(firstElement.date, date_fns.format(new Date(), "YYYY-MM-DD"))) {
+          isToday = true;
+        } else {
+          isToday = false;
+        }
+        successData.forEach((secondElement, secondIndex) => {
+
+          if (firstElement.date == secondElement.date) {
+            if (isToday) {
+              this.expenses_today += Number(secondElement.amount);
+            }
+            console.log(firstIndex)
+            this.transactions[this.transactions.length - 1].data.push(secondElement)
+          }
+        });
+      });
+      console.log(this.expenses_today)
+
+    }, (error => console.log(error)))
   }
 
   segmentChanged(ev: any) {
+    this.transactions = [];
+    this.budgetInfo = null;
+
     this.active = ev.detail.value;
     // console.log(this.active);
     // console.log('Segment changed', ev);
@@ -290,9 +459,6 @@ export class Tab2Page {
     this.getBudgetCurrentWeek();
     // this.storage.get('user_data').then((val) => this.checkIfParticipant(JSON.parse(val)));
   }
-
-
-
 
 
 
