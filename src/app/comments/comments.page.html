@@ -1,115 +1,65 @@
 <ion-header>
-  <ion-navbar>
-    <ion-toolbar>
+  <ion-toolbar color="light">
+    <ion-buttons slot="start">
+      <ion-button (click)="back();">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-title>Newsfeed</ion-title>
-   
   </ion-toolbar>
-  </ion-navbar>
 </ion-header>
 
-<ion-content padding
-  style="background:url(assets/img/AlCdC4GzQciyHkrVSYuW_background.jpg) no-repeat center;background-size:cover;"
-  id="page1">
-  
-  <ion-item text-wrap *ngIf="!isThereAnyVideos">
-    <ion-icon name="alert" item-start></ion-icon>
-    <h2>No results</h2>
-    <h3>No video results</h3>
-    <p>No video title contains the word "{{searchText}}"</p>
-</ion-item>
 
-  <div *ngFor="let video of videos; let i = index">
-  <ion-card *ngIf="video.videoVisible">
+<ion-content no-padding #content>
+  <ion-card *ngIf="topSaver" no-margin>
 
-    <ion-item >
-      <ion-avatar item-left>
-        <img src="../assets/images/avatar.png" />
-      </ion-avatar>
-      <h2>{{ video.title }}</h2>
-      <p>{{ video.user }}</p>
-    </ion-item>
 
-    <ion-card-content>
-      <video controls="controls" preload="auto" webkit-playsinline="webkit-playsinline" class="videoPlayer">
-        <source src="{{glo.ip}}/{{ video.location }}#t=0.5" type="video/mp4" /></video>
-      <ion-item text-center>
-        <ion-icon padding (click)="toggleHeart(i)" [style.color]="'#EF3B51'"
-          name="{{video.favorite ? 'heart' : 'heart-outline'}}"></ion-icon>
-
-        <ion-icon padding (click)="viewComments(i)" name="clipboard" [style.color]="'#EF3B58'"></ion-icon>
-
-      </ion-item>
+    <ion-card-content class="ion-text-center">
+      <ion-img [src]="topSaver.avatar_src" style="width:50%;margin: auto;display: block;"></ion-img>
     </ion-card-content>
+    <ion-card-header class="ion-text-center">
+      <ion-card-title>{{topSaver.full_name}}
+        <ion-card-subtitle>Top Saver of the week<ion-icon color="danger" name="heart"></ion-icon>
+        </ion-card-subtitle>
+      </ion-card-title>
+    </ion-card-header>
 
-    <ion-item *ngIf="video.commentCount" class="withLines">
-      <h6 (click)="viewComments(i)" style="float: right;">{{video.commentCount}}
-        <span *ngIf="video.commentCount == 1"> Comment</span>
-        <span *ngIf="video.commentCount != 1"> Comments</span>
-      </h6>
-    </ion-item>
+    <ion-list no-margin no-padding>
+      <div *ngFor="let comment of comments; let i = index;">
+        <ion-item color="primary" lines="none" no-margin>
+          <ion-avatar slot="start">
+            <img [src]="comment.avatar_src">
+          </ion-avatar>
+          <ion-label>
+            {{comment.full_name}}
+            <p text-wrap style="font-size:.8em" class="font-regular">{{comment.comment}}</p>
+          </ion-label>
 
-    <ion-list *ngIf="video.visible">
 
-      <ion-item *ngIf="!isEditing">
+          <ion-note class="font-regular" color="light" style="font-size:.6em" slot="end"
+            *ngIf="user_data && comment.user_id != user_data.id">
+            {{durationLastOnline(comment.timestamp)}} ago
+          </ion-note>
+          <ion-button slot="end" color="light" fill="clear" size="small"
+            *ngIf="user_data && comment.user_id == user_data.id" (click)="showPopover(comment,i, $event);">
+            <ion-note class="font-regular" color="light" style="font-size:.6em" slot="end" *ngIf="user_data">
+              {{durationLastOnline(comment.timestamp)}} ago
+            </ion-note>
+            <ion-icon name="more" slot="end"></ion-icon>
+          </ion-button>
 
-        <ion-avatar item-start text-center>
-          <ion-icon style="font-size: 42px;" name="person" [style.color]="'#EF3B51'"></ion-icon>
-        </ion-avatar>
-        <ion-icon (click)="putComment(i)" item-end name="send"></ion-icon>
-        <textarea #myComment id="myComment" placeholder="Write a comment..." rows="1" maxLength="500"
-          (input)="resize($event)" [(ngModel)]="video.writeComment">
-          </textarea>
-      </ion-item>
 
-      <ion-item *ngFor="let comment of video.comments; let j = index" text-wrap>
-        <ion-avatar item-start text-center>
-          <ion-icon style="font-size: 42px;" name="person" [style.color]="'#EF3B51'"></ion-icon>
-        </ion-avatar>
-        <h2 class="ion-text-capitalize" style="padding-bottom: 10px;">{{comment.fullname}}</h2>
-        <h3 *ngIf="!comment.isEditing">{{comment.comment}}</h3>
+        </ion-item>
+      </div>
 
-        <div *ngIf="comment.isEditing">
-            <textarea #editComment id="editComment" placeholder="Write a comment..." rows="1" maxLength="500"
-              (input)="resizeEdit(i,j)" [(ngModel)]="comment.editComment">
-           </textarea>
-           <ion-icon item-end text-center id="commitEdit" 
-            (click)="changeComment(i,j)" item-end name="send"></ion-icon>
-        </div>
-
-        <div *ngIf="!comment.isEditing" item-end>
-          <div *ngIf="comment.userid == user_id" style="float: right;">
-            <ion-icon name="more" (click)="commentOptions($event, i, j)"></ion-icon>
-          </div>
-
-          <br>
-          <br>
-          <p *ngIf="!comment.isEditing">{{comment.timestamp | date: format: "MMM d, y h:mm a"}}</p>
-
-        </div>
-      </ion-item>
-
-      <ion-item *ngIf="video.commentCountDisplayed < video.commentCount && video.visible" (click)="viewMoreComments(i)">
-        <ion-icon style="font-size: 32px;" name="arrow-dropdown" item-end></ion-icon>
-        View more comments
-      </ion-item>
 
     </ion-list>
-
   </ion-card>
-</div>
-  <ion-fab bottom right>
-    <button id="notif-btn" (click)="showNotif()" ion-fab>
-      <ion-icon name="notifications-outline">
-      </ion-icon>
-      <ion-badge *ngIf="numberOfNotif" id="notif-badge">{{numberOfNotif}}</ion-badge>
-    </button>
-  </ion-fab>
-
-  <!-- <ion-tabs>
-      <ion-tab (click)="showNotif()" title="Notif" tabIcon="notifications-outline" tabBadge="3" badge tabBadgeStyle="danger">
-        </ion-tab>
-  </ion-tabs> -->
-
-
-
 </ion-content>
+
+<ion-footer>
+  <ion-item color="primary">
+    <ion-input placeholder="Type a comment" #message></ion-input>
+    <ion-button color="light" fill="clear" (click)="sendComment(message.value)">Send</ion-button>
+  </ion-item>
+</ion-footer>

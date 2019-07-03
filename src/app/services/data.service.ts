@@ -21,7 +21,64 @@ export class DataService {
       }),
       params
     };
-    return this.http.get<[]>(url, httpOptions);
+    return this.http.get<any[]>(url, httpOptions);
+  }
+
+  updateComment(comment_id, comment) {
+    let body = {
+      comment_id,
+      comment
+    }
+    const url = this.server_ip + "/updateComment.php";
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      })
+    };
+    return this.http.post(url, body, httpOptions);
+  }
+
+  deleteComment(comment_id) {
+    const url = this.server_ip + "/deleteComment.php";
+    const params = new HttpParams().set("comment_id", comment_id);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      }),
+      params
+    };
+    return this.http.get<any>(url, httpOptions);
+  }
+
+  getComments(convo_name) {
+    const url = this.server_ip + "/comments.php";
+    const params = new HttpParams().set("convo_name", convo_name);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      }),
+      params
+    };
+    return this.http.get<any[]>(url, httpOptions);
+  }
+
+  sendComment(convo_name, comment, user_id) {
+    let body = {
+      convo_name,
+      comment,
+      user_id
+    }
+    const url = this.server_ip + "/sendComment.php";
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      })
+    };
+    return this.http.post(url, body, httpOptions);
   }
 
   addTransaction(transact_data) {
@@ -46,7 +103,7 @@ export class DataService {
     return this.http.post(url, transact_data, httpOptions);
   }
 
-  addCustomBudget(custom_data){
+  addCustomBudget(custom_data) {
     const url = this.server_ip + "/addCustomBudget.php";
     const httpOptions = {
       headers: new HttpHeaders({
@@ -56,7 +113,7 @@ export class DataService {
     };
     return this.http.post(url, custom_data, httpOptions);
   }
-  
+
   getTransactions(week_id) {
     const url = this.server_ip + "/getTransact.php";
     const params = new HttpParams().set("week_id", week_id)

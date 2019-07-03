@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start" (click)="back();">
+      <ion-icon slot="icon-only" name="arrow-round-back"></ion-icon>
+    </ion-buttons>
+
+    <ion-title>Edit Comment</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="editComment(editcommentVal.value);">
+        SAVE
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content no-padding>
+  <ion-textarea value="{{comment.comment}}" #editcommentVal color="primary"></ion-textarea>
+</ion-content>

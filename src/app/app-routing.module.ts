@@ -15,6 +15,8 @@ const routes: Routes = [
   { path: 'categories', loadChildren: './modals/categories/categories.module#CategoriesPageModule' },  { path: 'edit', loadChildren: './edit/edit.module#EditPageModule' },
   { path: 'search-date', loadChildren: './modals/search-date/search-date.module#SearchDatePageModule' },
   { path: 'comments', loadChildren: './comments/comments.module#CommentsPageModule' },
+  { path: 'comment-popover', loadChildren: './comment-popover/comment-popover.module#CommentPopoverPageModule' },
+  { path: 'edit-comment', loadChildren: './edit-comment/edit-comment.module#EditCommentPageModule' },
 
 ];
 @NgModule({
